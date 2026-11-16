@@ -22,6 +22,11 @@ def brand_logo():
 def _can_sales(user):
 	from erp_overrides.api.sales import CHAIN_DOCTYPES
 
+	if "eezze_erp_theme" in frappe.get_installed_apps():
+		# Eezzebuild: the Sales app is for the people who sell, the ones whose Start screen offers "New quotation" or
+		# who take orders at the till; read access to a sales document alone (a buyer, HR, the debtors clerk) is not
+		# a reason for the tile
+		return any(frappe.has_permission(dt, "create", user=user) for dt in ("Quotation", "Sales Order"))
 	return any(frappe.has_permission(dt, "read", user=user) for dt in CHAIN_DOCTYPES)
 
 

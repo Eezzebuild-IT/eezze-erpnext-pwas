@@ -29,7 +29,7 @@
 
 			<p v-if="empty" class="py-4 text-center text-sm text-gray-500">
 				{{ scope === "team" ? "No quotations this year yet." : "No quotations from you yet this year." }}
-				<router-link to="/quotations/new" class="underline">Start one</router-link>
+				<router-link v-if="boot.permissions?.Quotation?.create" to="/quotations/new" class="underline">Start one</router-link>
 			</p>
 
 			<template v-else>

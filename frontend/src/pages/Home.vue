@@ -2,8 +2,9 @@
 	<div class="h-full overflow-y-auto">
 		<header class="flex items-center gap-3 border-b bg-white px-4 lg:px-6 h-14 sticky top-0 z-10">
 			<h1 class="flex-1 truncate text-lg font-semibold">{{ greeting }}, {{ firstName }}</h1>
-			<Button icon-left="user-plus" label="New lead" class="hidden sm:inline-flex" @click="$router.push('/leads/new')" />
-			<Button variant="solid" icon-left="file-text" label="New quotation" @click="$router.push('/quotations/new')" />
+			<Button v-if="boot.permissions?.Lead?.create" icon-left="user-plus" label="New lead" class="hidden sm:inline-flex" @click="$router.push('/leads/new')" />
+			<!-- Eezzebuild: only for those who may quote (eezze-erpnext decision 0050) -->
+			<Button v-if="boot.permissions?.Quotation?.create" variant="solid" icon-left="file-text" label="New quotation" @click="$router.push('/quotations/new')" />
 		</header>
 
 		<div class="mx-auto w-full max-w-[1600px] p-4 lg:p-6 space-y-6">

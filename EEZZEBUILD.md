@@ -12,5 +12,15 @@ Entry, Employee and User rules), the Quotation permission and print overrides, t
 scheduler (ZATCA sweeps, Zambian tender scrapers, review digests) and the request and job hooks. Its patches are marked
 done by Frappe on a fresh install; its own doctypes (tenders, ZATCA, reviews, petty cash) stay empty.
 
-Still to adapt: the launcher's tiles to the rights Start uses (`eezze_erp_theme.landing.tiles`), and each PWA checked
-against our roles before it is offered to staff.
+Changed for Eezzebuild's rights:
+- the launcher's Sales tile shows to the people who sell (create on Quotation or Sales Order, the rule behind Start's
+  "New quotation" and the till), not to everyone who can read a sales document;
+- the Sales app's "New quotation", "New lead" and "Start one" show only to those who may create them (quoting is the
+  sales team's, eezze-erpnext decision 0050); the server refused them already.
+
+Checked on the staging copy (eezze-erpnext `docs/how-to/erpnext-staging.md`, `scripts/manual/staging-apps-check.mjs`):
+the launcher draws per sign-in, "My HR" opens Frappe HR's `/hrms` home in the same session, and every tile's screen
+opens; eezze-erpnext's 53 scripted role cases pass with this app installed.
+
+Still to adapt: the tender, ZATCA and review doctypes and screens taken out (they sit empty and their hooks are off),
+and each PWA walked against our roles by a person before it is offered to staff.
