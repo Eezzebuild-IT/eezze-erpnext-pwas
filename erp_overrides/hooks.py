@@ -5,6 +5,12 @@ app_description = "Mobile-first PWAs (sales, HR, accounts, admin) and their APIs
 app_email = "kelvinzawala@gmail.com"
 app_license = "mit"
 
+# Eezzebuild fork (16 Nov 2026, branch eezze): only the phone apps are kept on (the launcher and the sales, HR admin,
+# accounts and admin PWAs with their routes and APIs). Every hook into ERPNext's documents, the scheduler, the request
+# cycle, the print and payroll set-up is commented out below: the original author's company rules (ZATCA e-invoicing,
+# Zambian tender scrapers, warehouse and payment overrides, a payslip format) would change how our site works. See
+# EEZZEBUILD.md.
+
 # Apps
 # ------------------
 
@@ -23,7 +29,7 @@ add_to_apps_screen = [
 ]
 
 # Land on /launcher after login instead of /desk; Frappe asks this for system users too
-get_website_user_home_page = "erp_overrides.www.launcher.home_page"
+# get_website_user_home_page = "erp_overrides.www.launcher.home_page"
 
 # Includes in <head>
 # ------------------
@@ -50,9 +56,9 @@ get_website_user_home_page = "erp_overrides.www.launcher.home_page"
 # (the Quotation print guard's UI half is a Client Script, not an app asset —
 #  see scripts/install_print_guard.py)
 # doctype_js = {"doctype" : "public/js/doctype.js"}
-doctype_js = {
-	"Sales Invoice": "public/js/zatca_sales_invoice.js",
-}
+# doctype_js = {
+# 	"Sales Invoice": "public/js/zatca_sales_invoice.js",
+# }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -97,10 +103,10 @@ website_route_rules = [
 # ----------
 
 # add methods and filters to jinja environment
-jinja = {
-	# the Standard Payslip's figures (erp_overrides.payslip)
-	"methods": ["erp_overrides.payslip.standard_payslip"],
-}
+# jinja = {
+# 	# the Standard Payslip's figures (erp_overrides.payslip)
+# 	"methods": ["erp_overrides.payslip.standard_payslip"],
+# }
 # jinja = {
 # 	"methods": "erp_overrides.utils.jinja_methods",
 # 	"filters": "erp_overrides.utils.jinja_filters"
@@ -111,10 +117,10 @@ jinja = {
 
 # before_install = "erp_overrides.install.before_install"
 # Patches are marked done on a fresh install without running, so set-up that must exist runs here too
-after_install = [
-	"erp_overrides.payslip.install_standard_payslip",
-	"erp_overrides.patches.v1_0.agreed_net_pay.execute",
-]
+# after_install = [
+# 	"erp_overrides.payslip.install_standard_payslip",
+# 	"erp_overrides.patches.v1_0.agreed_net_pay.execute",
+# ]
 
 # Uninstallation
 # ------------
@@ -163,9 +169,9 @@ after_install = [
 # }
 
 # a Quotation may only be printed once its workflow reaches an approved state
-has_permission = {
-	"Quotation": "erp_overrides.quotation.has_permission",
-}
+# has_permission = {
+# 	"Quotation": "erp_overrides.quotation.has_permission",
+# }
 
 # Document Events
 # ---------------
@@ -179,59 +185,59 @@ has_permission = {
 # 	}
 # }
 
-doc_events = {
-	"Quotation": {
-		"before_print": "erp_overrides.quotation.before_print",
-	},
-	"Employee": {
-		# Fill an empty holiday list with "<company country> <year>".
-		"validate": [
-			"erp_overrides.hrms_setup.set_employee_holiday_list",
-			# HR staff aren't limited to their own record (erp_overrides.hr_access)
-			"erp_overrides.hr_access.keep_hr_unrestricted",
-		],
-	},
-	# Hardware stock that looks after itself (erp_overrides.stock_light)
-	"Item": {
-		"before_validate": "erp_overrides.stock_light.item_before_validate",
-	},
-	"Sales Invoice": {
-		"before_validate": "erp_overrides.stock_light.invoice_before_validate",
-		# ZATCA Phase 2 POC (erp_overrides.zatca); does nothing unless ZATCA Settings is on for the company
-		"before_submit": "erp_overrides.zatca.submit.before_submit",
-		"on_submit": "erp_overrides.zatca.submit.on_submit",
-		"before_cancel": "erp_overrides.zatca.submit.before_cancel",
-	},
-	"Purchase Receipt": {
-		"before_validate": "erp_overrides.stock_light.receipt_before_validate",
-	},
-	# three-way match before a supplier is paid (erp_overrides.three_way)
-	"Payment Entry": {
-		"before_submit": "erp_overrides.three_way.payment_before_submit",
-	},
-	"Purchase Order": {
-		"before_validate": "erp_overrides.stock_light.fill_warehouses",
-		"on_submit": "erp_overrides.stock_light.purchase_order_on_submit",
-	},
-	"Sales Order": {
-		"before_validate": "erp_overrides.stock_light.fill_warehouses",
-	},
-	"Delivery Note": {
-		"before_validate": "erp_overrides.stock_light.fill_warehouses",
-	},
-	"User": {
-		"on_update": "erp_overrides.hr_access.lift_on_hr_role",
-	},
-	"Letter Head": {
-		# private logos break every PDF printed by anyone but their uploader (payslip emails, …)
-		"on_update": "erp_overrides.patches.v1_0.make_letterhead_logos_public.on_letter_head_update",
-	},
-	"Payroll Settings": {
-		# Payslip format → Salary Slip's default print format (what /hrms downloads and emails attach)
-		"validate": "erp_overrides.payslip.validate_payroll_settings",
-		"on_update": "erp_overrides.payslip.sync_default_format",
-	},
-}
+# doc_events = {
+# 	"Quotation": {
+# 		"before_print": "erp_overrides.quotation.before_print",
+# 	},
+# 	"Employee": {
+# 		# Fill an empty holiday list with "<company country> <year>".
+# 		"validate": [
+# 			"erp_overrides.hrms_setup.set_employee_holiday_list",
+# 			# HR staff aren't limited to their own record (erp_overrides.hr_access)
+# 			"erp_overrides.hr_access.keep_hr_unrestricted",
+# 		],
+# 	},
+# 	# Hardware stock that looks after itself (erp_overrides.stock_light)
+# 	"Item": {
+# 		"before_validate": "erp_overrides.stock_light.item_before_validate",
+# 	},
+# 	"Sales Invoice": {
+# 		"before_validate": "erp_overrides.stock_light.invoice_before_validate",
+# 		# ZATCA Phase 2 POC (erp_overrides.zatca); does nothing unless ZATCA Settings is on for the company
+# 		"before_submit": "erp_overrides.zatca.submit.before_submit",
+# 		"on_submit": "erp_overrides.zatca.submit.on_submit",
+# 		"before_cancel": "erp_overrides.zatca.submit.before_cancel",
+# 	},
+# 	"Purchase Receipt": {
+# 		"before_validate": "erp_overrides.stock_light.receipt_before_validate",
+# 	},
+# 	# three-way match before a supplier is paid (erp_overrides.three_way)
+# 	"Payment Entry": {
+# 		"before_submit": "erp_overrides.three_way.payment_before_submit",
+# 	},
+# 	"Purchase Order": {
+# 		"before_validate": "erp_overrides.stock_light.fill_warehouses",
+# 		"on_submit": "erp_overrides.stock_light.purchase_order_on_submit",
+# 	},
+# 	"Sales Order": {
+# 		"before_validate": "erp_overrides.stock_light.fill_warehouses",
+# 	},
+# 	"Delivery Note": {
+# 		"before_validate": "erp_overrides.stock_light.fill_warehouses",
+# 	},
+# 	"User": {
+# 		"on_update": "erp_overrides.hr_access.lift_on_hr_role",
+# 	},
+# 	"Letter Head": {
+# 		# private logos break every PDF printed by anyone but their uploader (payslip emails, …)
+# 		"on_update": "erp_overrides.patches.v1_0.make_letterhead_logos_public.on_letter_head_update",
+# 	},
+# 	"Payroll Settings": {
+# 		# Payslip format → Salary Slip's default print format (what /hrms downloads and emails attach)
+# 		"validate": "erp_overrides.payslip.validate_payroll_settings",
+# 		"on_update": "erp_overrides.payslip.sync_default_format",
+# 	},
+# }
 
 # Scheduled Tasks
 # ---------------
@@ -254,43 +260,43 @@ doc_events = {
 # 	],
 # }
 
-scheduler_events = {
-	# ZATCA: flag simplified invoices close to the 24-hour reporting limit
-	"hourly": [
-		"erp_overrides.zatca.submit.check_overdue",
-	],
-	"cron": {
-		# ZATCA outbox (erp_overrides.zatca.submit): send what the queued job missed, retry failures
-		"*/5 * * * *": [
-			"erp_overrides.zatca.submit.sweep",
-		],
-		# Tender feeds (stubs in erp_overrides.scrapers; see docs/sadc-data-feeds.md)
-		"0 0,8,16 * * *": [
-			"erp_overrides.scrapers.enqueue_get_tenders",
-			"erp_overrides.scrapers.enqueue_get_zppa_portal_tenders",
-		],
-		# One email per country with the tenders the feeds brought in
-		"30 0,8,16 * * *": [
-			"erp_overrides.tender_digest.send_tender_digests",
-		],
-		# Central-bank rates into Currency Exchange, weekdays (stub in erp_overrides.scrapers)
-		"0 11,17 * * 1-5": [
-			"erp_overrides.scrapers.enqueue_sync_rates",
-		],
-		# Bi-weekly reviews: open windows, remind 2 days before due, mark overdue (erp_overrides.reviews)
-		"0 6 * * *": [
-			"erp_overrides.reviews.daily",
-		],
-		# ... and the overdue summary to HR, Monday mornings
-		"0 7 * * 1": [
-			"erp_overrides.reviews.weekly_overdue_summary",
-		],
-		# Keep this and next year's holiday lists and assignments loaded; on 1 Jan moves staff to the new year.
-		"30 0 1 * *": [
-			"erp_overrides.hrms_setup.roll_holiday_lists",
-		],
-	},
-}
+# scheduler_events = {
+# 	# ZATCA: flag simplified invoices close to the 24-hour reporting limit
+# 	"hourly": [
+# 		"erp_overrides.zatca.submit.check_overdue",
+# 	],
+# 	"cron": {
+# 		# ZATCA outbox (erp_overrides.zatca.submit): send what the queued job missed, retry failures
+# 		"*/5 * * * *": [
+# 			"erp_overrides.zatca.submit.sweep",
+# 		],
+# 		# Tender feeds (stubs in erp_overrides.scrapers; see docs/sadc-data-feeds.md)
+# 		"0 0,8,16 * * *": [
+# 			"erp_overrides.scrapers.enqueue_get_tenders",
+# 			"erp_overrides.scrapers.enqueue_get_zppa_portal_tenders",
+# 		],
+# 		# One email per country with the tenders the feeds brought in
+# 		"30 0,8,16 * * *": [
+# 			"erp_overrides.tender_digest.send_tender_digests",
+# 		],
+# 		# Central-bank rates into Currency Exchange, weekdays (stub in erp_overrides.scrapers)
+# 		"0 11,17 * * 1-5": [
+# 			"erp_overrides.scrapers.enqueue_sync_rates",
+# 		],
+# 		# Bi-weekly reviews: open windows, remind 2 days before due, mark overdue (erp_overrides.reviews)
+# 		"0 6 * * *": [
+# 			"erp_overrides.reviews.daily",
+# 		],
+# 		# ... and the overdue summary to HR, Monday mornings
+# 		"0 7 * * 1": [
+# 			"erp_overrides.reviews.weekly_overdue_summary",
+# 		],
+# 		# Keep this and next year's holiday lists and assignments loaded; on 1 Jan moves staff to the new year.
+# 		"30 0 1 * *": [
+# 			"erp_overrides.hrms_setup.roll_holiday_lists",
+# 		],
+# 	},
+# }
 
 # Testing
 # -------
@@ -331,12 +337,12 @@ scheduler_events = {
 # Request Events
 # ----------------
 # PDFs embed the site's own images instead of fetching them over HTTP (erp_overrides.pdf_images)
-before_request = ["erp_overrides.pdf_images.install"]
+# before_request = ["erp_overrides.pdf_images.install"]
 # after_request = ["erp_overrides.utils.after_request"]
 
 # Job Events
 # ----------
-before_job = ["erp_overrides.pdf_images.install"]
+# before_job = ["erp_overrides.pdf_images.install"]
 # after_job = ["erp_overrides.utils.after_job"]
 
 # User Data Protection
